@@ -22,7 +22,7 @@ class Game(models.Model):
         ordering = ['-release_date']
         db_table = 'games'
 
-    def str(self):
+    def __str__(self):
         return self.title
 
 
