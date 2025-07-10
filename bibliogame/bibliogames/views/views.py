@@ -6,15 +6,19 @@ from bibliogames.models import Game, Favorites, FavoriteGame
 
 
 def create_game(request):
-    if request.method == "POST":
-        form = GameCreateForm(request.POST)
-        if form.is_valid():
-            game = form.save()
-            game.save()
-            return redirect("")
+    if request.user.is_superuser():
+        if request.method == "POST":
+            form = GameCreateForm(request.POST)
+            if form.is_valid():
+                game = form.save()
+                game.save()
+                return redirect("")
+        else:
+            form = GameCreateForm()
 
     else:
-        form = GameCreateForm()
+        return HttpResponseForbidden("you can't add the game because you don't have rights")
+
     return render(request, "", context={"form": form})
 
 
