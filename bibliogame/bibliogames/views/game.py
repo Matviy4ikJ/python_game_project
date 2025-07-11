@@ -32,8 +32,6 @@ def index(request):
             games = games.order_by('-release_date')
         case "release_old":
             games = games.order_by('release_date')
-        case _:
-            games = games.order_by('-release_date')
 
     context = {
         'games': games,
@@ -53,3 +51,4 @@ def index(request):
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk, status='approved')
     return render(request, 'games/game_detail.html', {'game': game})
+

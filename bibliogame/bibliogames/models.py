@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Game(models.Model):
@@ -14,9 +15,15 @@ class Game(models.Model):
     developer = models.ForeignKey("Developer", on_delete=models.CASCADE)
     genres = models.ManyToManyField("Genre")
     platforms = models.ManyToManyField("Platforms")
-    rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, default=0.0)
     cover_image = models.ImageField(upload_to='game_covers/', null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+
+    @property
+    def average_rating(self):
+        reviews = self.reviews.all()
+        if reviews.exists():
+            return round(sum(r.rating for r in reviews) / reviews.count(), 1)
+        return 0.0
 
     class Meta:
         ordering = ['-release_date']
@@ -24,6 +31,23 @@ class Game(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Review(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'game')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} — {self.game.title} — {self.rating}★"
 
 
 class Developer(models.Model):
