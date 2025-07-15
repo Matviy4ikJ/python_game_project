@@ -54,3 +54,20 @@ class FavoriteGame(models.Model):
 
     class Meta:
         unique_together = ("favorites", "game")
+
+
+class Review(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'game')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} — {self.game.title} — {self.rating}★"

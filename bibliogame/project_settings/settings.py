@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bibliogames',
-    'accounts'
+    'accounts',
+    'captcha',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

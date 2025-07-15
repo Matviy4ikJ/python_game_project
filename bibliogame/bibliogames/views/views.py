@@ -61,4 +61,3 @@ def delete_favorite_game(request, game_id):
         except FavoriteGame.DoesNotExist:
             favorites = None
     return redirect("")
-
