@@ -101,6 +101,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+FAVORITE_SESSION_ID = "favorite"
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 

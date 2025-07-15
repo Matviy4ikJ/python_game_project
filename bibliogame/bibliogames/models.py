@@ -65,3 +65,15 @@ class Genre(models.Model):
 class Platforms(models.Model):
     name = models.CharField(max_length=100)
 
+
+class Favorites(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="favorites")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class FavoriteGame(models.Model):
+    favorites = models.ForeignKey(Favorites, on_delete=models.CASCADE, related_name="games")
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("favorites", "game")
