@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Game, Developer, Genre, Platforms
+from .models import Game, Developer, Genre, Platforms, Review, Favorites, FavoriteGame
 
 
 @admin.register(Game)
@@ -25,3 +25,21 @@ class GenreAdmin(admin.ModelAdmin):
 class PlatformsAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('user', 'game', 'rating', 'created_at')
+    list_filter = ('rating', 'created_at')
+    search_fields = ('user__username', 'game__title')
+
+
+@admin.register(Favorites)
+class FavoritesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+
+
+@admin.register(FavoriteGame)
+class FavoriteGameAdmin(admin.ModelAdmin):
+    list_display = ('favorites', 'game')
+    search_fields = ('game__title',)

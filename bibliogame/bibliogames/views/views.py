@@ -3,6 +3,8 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from ..forms import GameCreateForm
 from bibliogames.models import Game, Favorites, FavoriteGame
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def create_game(request):
@@ -61,4 +63,3 @@ def delete_favorite_game(request, game_id):
         except FavoriteGame.DoesNotExist:
             favorites = None
     return redirect("")
-
