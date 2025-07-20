@@ -2,7 +2,7 @@ import random
 from faker import Faker
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from ...models import Game, Developer, Genre, Platforms, Review, Favorites, FavoriteGame
+from bibliogames.models import Game, Developer, Genre, Platforms, Review, Favorites, FavoriteGame
 
 fake = Faker()
 

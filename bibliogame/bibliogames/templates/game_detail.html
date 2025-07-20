@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-3">
+    <div class="row">
+        <div class="col-md-6">
+            {% if game.cover_image %}
+                <img src="{{ game.cover_image.url }}" class="img-fluid rounded shadow" alt="{{ game.title }}">
+            {% else %}
+                <img src="" class="img-fluid rounded shadow" alt="No cover">
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <h3>{{ game.title }}</h3>
+
+            <p><strong>Release Date:</strong> {{ game.release_date }}</p>
+            <p><strong>Developer:</strong> {{ game.developer.name }}</p>
+
+            <p><strong>Genres:</strong>
+                {{ game.genre.name }}
+            </p>
+
+            <p><strong>Platforms:</strong>
+                {{ game.platform.name }}
+            </p>
+
+            <div class="rating my-2">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= game.average_rating|default:0|floatformat:0|int %}
+                        <i class="bi bi-star-fill text-warning"></i>
+                    {% else %}
+                        <i class="bi bi-star text-muted"></i>
+                    {% endif %}
+                {% endfor %}
+                <small class="text-muted ms-2">({{ game.average_rating }})</small>
+            </div>
+
+            {% if game.description %}
+                <p>{{ game.description }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

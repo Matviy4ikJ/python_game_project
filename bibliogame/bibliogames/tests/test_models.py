@@ -25,15 +25,6 @@ def test_game_model():
     assert developer.website == "test_website"
 
 
-# @pytest.mark.django_db
-# def test_favorite_model(user, game):
-#     favorite = FavoriteGame.objects.create(favorites=user.favorites,
-#                                            game=game)
-#
-#     assert user.favorite == game
-#     assert favorite.created_at is not None
-
-
 @pytest.mark.django_db
 def test_review_model(user, game):
     review = Review.objects.create(

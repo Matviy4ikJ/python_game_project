@@ -13,9 +13,9 @@ app_name = 'accounts'
 
 urlpatterns = [
     path('register/', register, name='register'),
-    path('confirm-email/', confirm_email_view, name='confirm_email'),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('profile/', profile_view, name='profile'),
-    path('profile/edit/', edit_profile_view, name='edit_profile'),
+    path('confirm-email/', confirm_email_view, name='confirm_email_view'),
+    path('login/', login_view, name='login_view'),
+    path('logout/', logout_view, name='logout_view'),
+    path('profile/', profile_view, name='profile_view'),
+    path('profile/edit/', edit_profile_view, name='edit_profile_view'),
 ]

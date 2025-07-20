@@ -46,8 +46,3 @@ def index(request):
     }
 
     return render(request, 'bibliogames/index.html', context)
-
-
-def game_detail(request, pk):
-    game = get_object_or_404(Game, pk=pk, status='approved')
-    return render(request, 'bibliogames/game_detail.html', {'game': game})

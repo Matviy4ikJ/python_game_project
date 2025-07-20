@@ -52,7 +52,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return redirect('bibliogames:index')
 
 
 @login_required
