@@ -45,7 +45,7 @@ def index(request):
         'sort_option': sort_option or '',
     }
 
-    return render(request, 'games/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def game_detail(request, pk):
