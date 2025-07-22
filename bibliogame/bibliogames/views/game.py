@@ -50,4 +50,14 @@ def index(request):
 
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk, status='approved')
-    return render(request, 'games/game_detail.html', {'game': game})
+    reviews = game.reviews.select_related('user').all()
+
+    user_review = None
+    if request.user.is_authenticated:
+        user_review = reviews.filter(user=request.user).first()
+
+    return render(request, 'games/game_detail.html', {
+        'game': game,
+        'reviews': reviews,
+        'user_review': user_review,
+    })
