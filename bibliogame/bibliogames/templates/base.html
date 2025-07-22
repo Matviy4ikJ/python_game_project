@@ -2,10 +2,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <h1>Hello</h1>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Product{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark fixed-top">
+            <div class="container d-flex flex-column">
+                <div class="mb-2">
+                    <a href="{% url 'index' %}" class="navbar-brand">Home</a>
+                </div>
+                <form action="{% url 'games:index' %}" method="get" class="d-flex flex-wrap justify-content-center gap-2 mx-auto" onchange="this.form.submit()">
+                    <select name="genre" class="form-select me-2" style="min-width: 150px;">
+                        <option value="">
+                            Genre
+                        </option>
+                        {% for genre in genres %}
+                        <option value="{{ genre.id }}" {% if selected_genre == genre.id %}selected{% endif %}>
+                            {{ genre.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <select name="platform" class="form-select me-2" style="min-width: 150px;">
+                        <option value="">
+                            Platform
+                        </option>
+                        {% for platform in platforms %}
+                        <option value="{{ platform.id }}" {% if selected_platform == platform.id %}selected{% endif %}>
+                            {{ platform.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
 
+                    <select name="developer" class="form-select me-2" style="min-width: 150px;">
+                        <option value="">
+                            Developer
+                        </option>
+                        {% for developer in developers %}
+                        <option value="{{ developer.id }}" {% if selected_developer == developer.id %}selected{% endif %}>
+                            {{ developer.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <input  
+                        type="search" class="form-control me-3" name="search"
+                        placeholder="Search games..."
+                        value="{{ request.GET.search|default_if_none:'' }}"
+                        onchange="this.form.submit()"
+                        style="min-width: 200px;"
+                    >
+
+                    <select name="sort" class="form-select me-2" onchange="this.form.submit()" style="min-width: 150px;">
+                        <option value="" {% if not request.GET.sort %}selected{% endif %}>Sort</option>
+                        <option value="rating_high" {% if request.GET.sort == "rating_high" %}selected{% endif %}>Highest rating</option>
+                        <option value="rating_low" {% if request.GET.sort == "rating_low" %}selected{% endif %}>Lowest rating</option>
+                        <option value="release_new" {% if request.GET.sort == "release_new" %}selected{% endif %}>Newest first</option>
+                        <option value="release_old" {% if request.GET.sort == "release_old" %}selected{% endif %}>Oldest first</option>
+                    </select>
+                </form>
+                <div class="">
+                    <ul class="navbar-nav ms-auto">
+                        {% if request.user.is_authenticated %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'accounts:profile' %}">{{ request.user.username }}</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'accounts:logout' %}">Log out</a>
+                                    </li>
+                        {% else %}
+                                <div>
+                                    <li class="nav-item">
+                                        <a href="{% url 'accounts:register' %}" class="navbar-brand">Register</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{% url 'accounts:login' %}" class="navbar-brand">Log In</a>
+                                    </li>
+                                </div>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container pt-5 mt-5 flex-shrink-0">
+        {% block content %} 
+        {% endblock %}
+    </main>
+
+    <footer>
+        
+    </footer>
 </body>
 </html>
