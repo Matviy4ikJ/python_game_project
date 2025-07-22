@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'bibliogames',
     'accounts',
     'captcha',
+<<<<<<< HEAD
+=======
+    'rest_framework'
+>>>>>>> origin/mybranch
 ]
 
 MIDDLEWARE = [

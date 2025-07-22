@@ -2,7 +2,7 @@ import random
 from faker import Faker
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from ...models import Game, Developer, Genre, Platforms, Review, Favorites, FavoriteGame
+from bibliogames.models import Game, Developer, Genre, Platforms, Review, Favorites, FavoriteGame
 
 fake = Faker()
 
@@ -63,5 +63,4 @@ class Command(BaseCommand):
             fav_games = random.sample(games, k=random.randint(2, 5))
             for game in fav_games:
                 FavoriteGame.objects.create(favorites=fav, game=game)
-
         self.stdout.write(self.style.SUCCESS("BD successfully loaded with data"))

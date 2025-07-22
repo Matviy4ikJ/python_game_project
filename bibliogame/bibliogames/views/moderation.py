@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
-from ..models import Game
+from bibliogames.models import Game
 
 
 @staff_member_required
@@ -18,10 +18,9 @@ def moderate_game(request, game_id, action):
     elif action == 'reject':
         game.status = 'rejected'
     else:
-        return redirect('moderation_list')
-
+        return redirect("bibliogames:moderation_list")
     game.save()
-    return redirect('moderation_list')
+    return redirect("bibliogames:moderation_list")
 
 
 @staff_member_required()
@@ -29,4 +28,4 @@ def delete_game(request, game_id):
     game = get_object_or_404(Game, id=game_id)
 
     game.delete()
-    return redirect("moderation_list")
+    return redirect("accounts:profile_view")
