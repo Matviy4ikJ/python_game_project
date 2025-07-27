@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 
 
 class RegisterForm(UserCreationForm):
+    username = forms.CharField(required=True)
     email = forms.EmailField(required=True)
     captcha = CaptchaField()
 

@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from bibliogames.models import Game, Developer, Genre, Platforms, Review, Favorites, FavoriteGame
 
+
 fake = Faker()
 
 
@@ -12,6 +13,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write("Clearing DB")
+
+        User.objects.all().delete()
         Game.objects.all().delete()
         Developer.objects.all().delete()
         Review.objects.all().delete()
@@ -28,6 +31,16 @@ class Command(BaseCommand):
 
         self.stdout.write("Creating users")
         users = [User.objects.create_user(username=f"user{i}", password="test12345") for i in range(5)]
+
+        self.stdout.write("Creating random superusers")
+        team_admins = []
+        for _ in range(3):
+            username = f"admin_{fake.user_name()}{random.randint(10, 99)}"
+            email = fake.email()
+            password = "admin123"
+            user = User.objects.create_superuser(username=username, email=email, password=password)
+            team_admins.append(user)
+            self.stdout.write(f"Superuser created: {username} / {password}")
 
         self.stdout.write("Creating developers")
         devs = [Developer.objects.create(name=fake.company(), website=fake.url()) for _ in range(5)]
@@ -64,3 +77,6 @@ class Command(BaseCommand):
             for game in fav_games:
                 FavoriteGame.objects.create(favorites=fav, game=game)
         self.stdout.write(self.style.SUCCESS("BD successfully loaded with data"))
+
+
+            

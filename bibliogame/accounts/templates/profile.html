@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-  4">Profile</h2>
+
+    <div class="card p-4" style="max-width: 500px;">
+        <div class="text-center mb-3">
+            <img src="{{ profile.avatar.url }}" alt="avatar" class="rounded-circle" width="150">
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <strong>Username:</strong> {{ profile.user.username }}
+            </li>
+            <li class="list-group-item">
+                <strong>Email:</strong> {{ profile.user.email }}
+            </li>
+
+            <li class="list-group-item">
+                <strong>Favorites:</strong>
+                {% if profile.favorites.exists %}
+                    <ul class="mt-2">
+                        {% for game in profile.favorites.all %}
+                            <li>{{ game.title }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    No favorite games
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

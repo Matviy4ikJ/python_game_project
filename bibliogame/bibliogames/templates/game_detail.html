@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <div class="container my-3">
     <div class="row">
         <div class="col-md-6">
             {% if game.cover_image %}
-                <img src="{{ game.cover_image.url }}" class="img-fluid rounded shadow" alt="{{ game.title }}">
+                <img src="{% static 'avatars/default_avatar.png' %}" class="img-fluid rounded shadow" alt="{{ game.title }}">
             {% else %}
                 <img src="" class="img-fluid rounded shadow" alt="No cover">
             {% endif %}
@@ -18,22 +18,31 @@
             <p><strong>Developer:</strong> {{ game.developer.name }}</p>
 
             <p><strong>Genres:</strong>
-                {{ game.genre.name }}
+                {% for genre in game.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No genres
+                {% endfor %}
             </p>
 
             <p><strong>Platforms:</strong>
-                {{ game.platform.name }}
+                {% for platform in game.platforms.all %}
+                    {{ platform.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No platforms
+                {% endfor %}
             </p>
 
-            <div class="rating my-2">
-                {% for i in "12345" %}
-                    {% if forloop.counter <= game.average_rating|default:0|floatformat:0|int %}
-                        <i class="bi bi-star-fill text-warning"></i>
-                    {% else %}
-                        <i class="bi bi-star text-muted"></i>
-                    {% endif %}
-                {% endfor %}
-                <small class="text-muted ms-2">({{ game.average_rating }})</small>
+            <div class="rating mb-2">
+                    {% with "12345"|make_list as stars %}
+                        {% for i in stars %}
+                            {% if forloop.counter <= game.average_rating %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% else %}
+                                <i class="bi bi-star text-muted"></i>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
             </div>
 
             {% if game.description %}

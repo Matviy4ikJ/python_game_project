@@ -10,6 +10,7 @@ from django.conf import settings
 
 
 from accounts.models import Profile
+from bibliogames.models import Favorites
 from accounts.forms import RegisterForm, ProfileUpdateForm, RegisterFormWithoutCaptcha
 
 
@@ -27,6 +28,7 @@ def register(request):
                 user.save()
 
                 Profile.objects.create(user=user)
+                Favorites.objects.create(user=user)
 
                 login(request, user)
                 messages.success(request, 'Registration successful.')
@@ -44,7 +46,7 @@ def login_view(request):
         if user:
             login(request, user)
             next_url = request.GET.get('next')
-            return redirect(next_url or "index")
+            return redirect(next_url or "bibliogames:index")
         else:
             return render(request, 'login.html', {'error': 'Incorrect login or password'})
     return render(request, 'login.html')
@@ -52,7 +54,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return redirect('bibliogames:index')
 
 
 @login_required
@@ -102,3 +104,7 @@ def confirm_email_view(request):
         return render(request, "confirm_email.html", {"email": email})
     else:
         return HttpResponseBadRequest("Invalid form data")
+
+
+def password_reset_view(request):
+    ...
