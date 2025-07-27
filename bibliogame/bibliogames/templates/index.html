@@ -1,5 +1,6 @@
-{% load static %}
 {% extends 'base.html' %}
+
+{% load static %}
 {% block content %}
     <h1>Bibliogame</h1>
 
@@ -22,39 +23,43 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ game.title }}</h5>
     
-                    <div class="mb-2">
-                        {% for i in "12345" %}
-                            {% if forloop.counter <= game.rating|default:0|floatformat:0 %}
+                <div class="rating mb-2">
+                    {% with "12345"|make_list as stars %}
+                        {% for i in stars %}
+                            {% if forloop.counter <= game.average_rating %}
                                 <i class="bi bi-star-fill text-warning"></i>
                             {% else %}
                                 <i class="bi bi-star text-muted"></i>
                             {% endif %}
                         {% endfor %}
-                    </div>
-
-                    {% if request.user.is_authenticated %}
-                    {% with user_favorites=request.user.favorites %}
-                        {% if user_favorites.games.filter(game=game).exists %}
-                            <form action="{% url 'games:delete_favorite_game' game.id %}" method="post" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-heart-fill"></i> Remove from Favorites
-                                </button>
-                            </form>
-                        {% else %}
-                            <form action="{% url 'games:add_favorite_game' game.id %}" method="post" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-heart"></i> Add to Favorites
-                                </button>
-                            </form>
-                        {% endif %}
                     {% endwith %}
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-heart"></i> Log in to add favorites
-                        </a>
-                    {% endif %}
+                </div>
+
+                <a class="btn btn-primary" href="{% url 'bibliogames:game_detail' pk=game.pk %}">Details</a>
+
+
+
+                        {% if request.user.is_authenticated %}
+                            {% if game.id in favorite_game_ids %}
+                                <form action="{% url 'bibliogames:delete_favorite_game' game.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-heart-fill"></i> Remove from Favorites
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'bibliogames:add_favorite_game' game.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-heart"></i> Add to Favorites
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-heart"></i> Log in to add favorites
+                            </a>
+                        {% endif %}
 
                 </div>
             </div>

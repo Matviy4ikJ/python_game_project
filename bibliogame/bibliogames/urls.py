@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.views import create_game, add_favorite_game, delete_favorite_game, game_detail
-from .views.moderation import moderation_list, moderate_game, delete_game
+from .views.moderation import moderation_list, moderate_game, delete_game, moderate_game_detail
 from bibliogames.views.game import index
 
 app_name = "bibliogames"
@@ -13,5 +13,6 @@ urlpatterns = [
     path('favorite_game/delete/<int:game_id>/', delete_favorite_game, name='delete_favorite_game'),
     path('game/<int:pk>/', game_detail, name='game_detail'),
     path('game/moderate/<int:game_id>/<str:action>/', moderate_game, name="moderate_game"),
+    path('game/moderate/<int:game_id>/', moderate_game_detail, name='moderate_game_detail'),
     path('game/moderate/list/', moderation_list, name="moderation_list"),
 ]

@@ -25,9 +25,11 @@ def index(request):
 
     match sort_option:
         case "rating_high":
-            games = games.order_by('-rating')
+            games = list(games)
+            games.sort(key=lambda g: g.average_rating, reverse=True)
         case "rating_low":
-            games = games.order_by('rating')
+            games = list(games)
+            games.sort(key=lambda g: g.average_rating)
         case "release_new":
             games = games.order_by('-release_date')
         case "release_old":
@@ -50,4 +52,4 @@ def index(request):
 
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk, status='approved')
-    return render(request, 'games/game_detail.html', {'game': game})
+    return render(request, 'game_detail.html', {'game': game})

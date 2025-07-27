@@ -29,3 +29,11 @@ def delete_game(request, game_id):
 
     game.delete()
     return redirect("accounts:profile_view")
+
+
+@staff_member_required()
+def moderate_game_detail(request, pk):
+    game = get_object_or_404(Game, pk=pk, status='pending')
+    return render(request, 'game_detail.html', {'game': game})
+
+

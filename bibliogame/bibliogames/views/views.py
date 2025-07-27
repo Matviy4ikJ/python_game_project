@@ -17,11 +17,11 @@ def create_game(request):
             game.author = request.user
             game.status = 'pending'
             game.save()
-            return redirect("accounts:profile_view")
+            return redirect("accounts:profile")
     else:
         form = GameCreateForm()
 
-    return render(request, "bibliogames/create_game.html", context={"form": form})
+    return render(request, "create_game.html", context={"form": form})
 
 
 def delete_game(request, game_id):
@@ -31,7 +31,7 @@ def delete_game(request, game_id):
         return HttpResponseForbidden("You can't delete the game because you don't have rights")
 
     game.delete()
-    return redirect("accounts:profile_view")
+    return redirect("accounts:profile")
 
 
 def add_favorite_game(request, game_id):
@@ -39,12 +39,13 @@ def add_favorite_game(request, game_id):
 
     if not request.user.is_authenticated:
         favorites = request.session.get(settings.FAVORITE_SESSION_ID, {})
+        favorites[str(game_id)] = True
         request.session[settings.FAVORITE_SESSION_ID] = favorites
     else:
-        favorites = request.user.favorites
+        favorites, _ = Favorites.objects.get_or_create(user=request.user)
         favorite_game, created = FavoriteGame.objects.get_or_create(favorites=favorites, game=game)
-
-    return redirect("accounts:profile_view")
+        
+    return redirect("accounts:profile")
 
 
 def delete_favorite_game(request, game_id):
@@ -63,9 +64,9 @@ def delete_favorite_game(request, game_id):
         except FavoriteGame.DoesNotExist:
             pass
 
-    return redirect("accounts:profile_view")
+    return redirect("accounts:profile")
 
 
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk, status='approved')
-    return render(request, 'bibliogames/game_detail.html', {'game': game})
+    return render(request, 'game_detail.html', {'game': game})

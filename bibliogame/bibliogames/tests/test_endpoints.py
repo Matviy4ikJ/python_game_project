@@ -26,6 +26,23 @@ def test_user_game_creation_for_moderate(client, game, user, developer, genres, 
 
 
 @pytest.mark.django_db
+def test_not_authenticated_user_game_creation_for_moderate(client, game, user, developer, genres, platforms):
+    data = {
+        "title": "test_game",
+        "description": "test_description",
+        "release_date": "2013-08-12",
+        "developer": developer.id,
+        "genres": [genre.id for genre in genres],
+        "platforms": [platform.id for platform in platforms]
+    }
+
+    url = reverse("bibliogames:create_game")
+    response = client.post(url, data=data, format="json")
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
 def test_game_delete_by_moderator(user, client, game):
     user.is_staff = True
     user.save()
@@ -72,6 +89,21 @@ def test_game_moderate_action_rejected(user, client, game):
     game.refresh_from_db()
     assert game.status == "rejected"
 
+
+@pytest.mark.django_db
+def test_game_moderate_action_invalid(user, client, game, super_user):
+    client.force_login(user=super_user)
+
+    url = reverse("bibliogames:moderate_game", args=[game.id, "invalid"])
+
+    response = client.post(url)
+
+    assert response.status_code == 302
+
+    game.refresh_from_db()
+    assert game.status != "approved"
+    assert game.status != "rejected"
+    
 
 @pytest.mark.django_db
 def test_game_moderation_list(user, client, game):

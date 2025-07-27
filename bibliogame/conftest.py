@@ -1,7 +1,6 @@
 import os
 import django
 import pytest
-from rest_framework.test import APIClient
 
 from django.contrib.auth.models import User
 
@@ -13,14 +12,9 @@ django.setup()
 def user():
     return User.objects.create_user(
         username="testuser",
-        password="1234"
+        password="testpass",
+        email="testmail@example.com"
     )
-
-
-@pytest.fixture
-def api_client():
-    apiclient = APIClient()
-    return apiclient
 
 
 @pytest.fixture

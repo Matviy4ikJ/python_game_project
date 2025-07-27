@@ -6,6 +6,8 @@ from .views.views import (
     profile_view,
     edit_profile_view,
     confirm_email_view,
+    password_reset_view
+    
 )
 
 app_name = 'accounts'
@@ -17,4 +19,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
     path('profile/edit/', edit_profile_view, name='edit_profile'),
+    path('login/password-reset/', password_reset_view, name='password_reset')
 ]
