@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from bibliogames.forms import GameCreateForm
 from bibliogames.models import Game, Favorites, FavoriteGame
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def create_game(request):
@@ -62,6 +64,7 @@ def delete_favorite_game(request, game_id):
             game_del = FavoriteGame.objects.get(favorites=favorites, game=game)
             game_del.delete()
         except FavoriteGame.DoesNotExist:
+<<<<<<< HEAD
             pass
 
     return redirect("accounts:profile")
@@ -70,3 +73,7 @@ def delete_favorite_game(request, game_id):
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk, status='approved')
     return render(request, 'game_detail.html', {'game': game})
+=======
+            favorites = None
+    return redirect("")
+>>>>>>> 5045152331b4cbc26534e25723e01ea83fd48688

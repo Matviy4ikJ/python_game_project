@@ -40,6 +40,7 @@ class Review(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='reviews')
     rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
     comment = models.TextField(blank=True)
+    is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -83,6 +84,7 @@ class FavoriteGame(models.Model):
 
     class Meta:
         unique_together = ("favorites", "game")
+<<<<<<< HEAD
 
 
 class Review(models.Model):
@@ -100,3 +102,5 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.game.title} — {self.rating}★"
+=======
+>>>>>>> 5045152331b4cbc26534e25723e01ea83fd48688
