@@ -15,7 +15,7 @@ class Game(models.Model):
     developer = models.ForeignKey("Developer", on_delete=models.CASCADE)
     genres = models.ManyToManyField("Genre")
     platforms = models.ManyToManyField("Platforms")
-    cover_image = models.ImageField(upload_to='game_covers/', null=True, blank=True)
+    cover_image = models.ImageField(upload_to='avatars/', null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
     @property
@@ -84,7 +84,6 @@ class FavoriteGame(models.Model):
 
     class Meta:
         unique_together = ("favorites", "game")
-<<<<<<< HEAD
 
 
 class Review(models.Model):
@@ -102,5 +101,4 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.game.title} — {self.rating}★"
-=======
->>>>>>> 5045152331b4cbc26534e25723e01ea83fd48688
+

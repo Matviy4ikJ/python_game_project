@@ -10,7 +10,7 @@ from django.conf import settings
 
 
 from accounts.models import Profile
-from bibliogames.models import Favorites
+from bibliogames.models import Favorites 
 from accounts.forms import RegisterForm, ProfileUpdateForm, RegisterFormWithoutCaptcha
 
 
@@ -23,7 +23,6 @@ def register(request):
                 form.add_error('email', 'This email is already taken')
             else:
                 user = form.save(commit=False)
-                user.username = email
                 user.set_password(form.cleaned_data['password1'])
                 user.save()
 
@@ -60,7 +59,16 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     profile = request.user.profile
-    return render(request, 'profile.html', {"profile": profile})
+    try:
+        favorites = request.user.favorites
+        favorite_games = [fg.game for fg in favorites.games.all()]
+    except Favorites.DoesNotExist:
+        favorite_games = []
+
+    return render(request, 'profile.html', {
+        "profile": profile,
+        "favorite_games": favorite_games,
+    })
 
 
 @login_required

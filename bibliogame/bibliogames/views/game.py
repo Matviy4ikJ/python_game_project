@@ -35,6 +35,16 @@ def index(request):
         case "release_old":
             games = games.order_by('release_date')
 
+
+    if request.user.is_authenticated:
+        try:
+            favorites = request.user.favorites
+            favorite_game_ids = set(fg.game.id for fg in favorites.games.all())
+        except Favorites.DoesNotExist:
+            favorite_game_ids = set()
+    else:
+        favorite_game_ids = set()
+
     context = {
         'games': games,
         'genres': Genre.objects.all(),
@@ -45,6 +55,7 @@ def index(request):
         'selected_developer': int(developer_id) if developer_id else None,
         'search_query': search_query or '',
         'sort_option': sort_option or '',
+        'favorite_game_ids': favorite_game_ids, 
     }
 
     return render(request, 'index.html', context)
@@ -52,18 +63,14 @@ def index(request):
 
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk, status='approved')
-<<<<<<< HEAD
-    return render(request, 'game_detail.html', {'game': game})
-=======
     reviews = game.reviews.select_related('user').all()
 
     user_review = None
     if request.user.is_authenticated:
         user_review = reviews.filter(user=request.user).first()
 
-    return render(request, 'games/game_detail.html', {
+    return render(request, 'game_detail.html', {
         'game': game,
         'reviews': reviews,
         'user_review': user_review,
     })
->>>>>>> 5045152331b4cbc26534e25723e01ea83fd48688

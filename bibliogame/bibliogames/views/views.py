@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from bibliogames.forms import GameCreateForm
@@ -15,10 +15,19 @@ def create_game(request):
     if request.method == "POST":
         form = GameCreateForm(request.POST)
         if form.is_valid():
+            developer_name = form.cleaned_data['developer_name']
+            developer_website = form.cleaned_data['developer_website']
+            developer, _ = Developer.objects.get_or_create(
+                name=developer_name,
+                defaults={'website': developer_website}
+            )
+
             game = form.save(commit=False)
+            game.developer = developer
             game.author = request.user
             game.status = 'pending'
             game.save()
+            form.save_m2m()
             return redirect("accounts:profile")
     else:
         form = GameCreateForm()
@@ -45,8 +54,8 @@ def add_favorite_game(request, game_id):
         request.session[settings.FAVORITE_SESSION_ID] = favorites
     else:
         favorites, _ = Favorites.objects.get_or_create(user=request.user)
-        favorite_game, created = FavoriteGame.objects.get_or_create(favorites=favorites, game=game)
-        
+        FavoriteGame.objects.get_or_create(favorites=favorites, game=game)
+        favorites.save()
     return redirect("accounts:profile")
 
 
@@ -64,16 +73,6 @@ def delete_favorite_game(request, game_id):
             game_del = FavoriteGame.objects.get(favorites=favorites, game=game)
             game_del.delete()
         except FavoriteGame.DoesNotExist:
-<<<<<<< HEAD
             pass
 
     return redirect("accounts:profile")
-
-
-def game_detail(request, pk):
-    game = get_object_or_404(Game, pk=pk, status='approved')
-    return render(request, 'game_detail.html', {'game': game})
-=======
-            favorites = None
-    return redirect("")
->>>>>>> 5045152331b4cbc26534e25723e01ea83fd48688
