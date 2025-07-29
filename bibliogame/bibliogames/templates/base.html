@@ -35,49 +35,54 @@
 
                     {% endif %}
                 </div>
-                <form action="{% url 'bibliogames:index' %}" method="get" class="d-flex flex-wrap gap-2" onchange="this.form.submit()">
-                    <select name="genre" class="form-select me-2" style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;">
-                        <option value="">Genre</option>
-                        {% for genre in genres %}
-                        <option value="{{ genre.id }}" {% if selected_genre == genre.id %}selected{% endif %}>{{ genre.name }}</option>
-                        {% endfor %}
-                    </select>
+                    <form action="{% url 'bibliogames:index' %}" method="get" class="d-flex flex-wrap gap-2">
+                        <select name="genre" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            <option value="">Genre</option>
+                            {% for genre in genres %}
+                            <option value="{{ genre.id }}" {% if selected_genre == genre.id %}selected{% endif %}>{{ genre.name }}</option>
+                            {% endfor %}
+                        </select>
 
-                    <select name="platform" class="form-select me-2" style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;">
-                        <option value="">Platform</option>
-                        {% for platform in platforms %}
-                        <option value="{{ platform.id }}" {% if selected_platform == platform.id %}selected{% endif %}>{{ platform.name }}</option>
-                        {% endfor %}
-                    </select>
+                        <select name="platform" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            <option value="">Platform</option>
+                            {% for platform in platforms %}
+                            <option value="{{ platform.id }}" {% if selected_platform == platform.id %}selected{% endif %}>{{ platform.name }}</option>
+                            {% endfor %}
+                        </select>
 
-                    <select name="developer" class="form-select me-2" style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;">
-                        <option value="">Developer</option>
-                        {% for developer in developers %}
-                        <option value="{{ developer.id }}" {% if selected_developer == developer.id %}selected{% endif %}>{{ developer.name }}</option>
-                        {% endfor %}
-                    </select>
+                        <select name="developer" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            <option value="">Developer</option>
+                            {% for developer in developers %}
+                            <option value="{{ developer.id }}" {% if selected_developer == developer.id %}selected{% endif %}>{{ developer.name }}</option>
+                            {% endfor %}
+                        </select>
 
-                    <select name="sort" class="form-select me-2" onchange="this.form.submit()" style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;">
-                        {% with request.GET.sort as current_sort %}
-                            <option value="" {% if not current_sort %}selected{% endif %}>Sort</option>
-                            <option value="rating_high" {% if current_sort == "rating_high" %}selected{% endif %}>Highest rating</option>
-                            <option value="rating_low" {% if current_sort == "rating_low" %}selected{% endif %}>Lowest rating</option>
-                            <option value="release_new" {% if current_sort == "release_new" %}selected{% endif %}>Newest first</option>
-                            <option value="release_old" {% if current_sort == "release_old" %}selected{% endif %}>Oldest first</option>
-                        {% endwith %}
-                    </select>
+                        <select name="sort" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            {% with request.GET.sort as current_sort %}
+                                <option value="" {% if not current_sort %}selected{% endif %}>Sort</option>
+                                <option value="rating_high" {% if current_sort == "rating_high" %}selected{% endif %}>Highest rating</option>
+                                <option value="rating_low" {% if current_sort == "rating_low" %}selected{% endif %}>Lowest rating</option>
+                                <option value="release_new" {% if current_sort == "release_new" %}selected{% endif %}>Newest first</option>
+                                <option value="release_old" {% if current_sort == "release_old" %}selected{% endif %}>Oldest first</option>
+                            {% endwith %}
+                        </select>
 
-                    <input
-                        type="search" class="form-control me-3" name="search"
-                        placeholder="Search games..."
-                        value="{{ request.GET.search|default_if_none:'' }}"
-                        onchange="this.form.submit()"
-                        style="min-width: 200px;"
-                    >
-
-
-                </form>
-
+                        <input type="search"
+                            class="form-control me-3"
+                            name="search"
+                            placeholder="Search games..."
+                            value="{{ request.GET.search|default_if_none:'' }}"
+                            onchange="this.form.submit()"
+                            style="min-width: 200px;">
+                    </form>
                 <div>
                     <ul class="navbar-nav ms-auto">
                         {% if request.user.is_authenticated %}
