@@ -132,3 +132,20 @@ def test_confirm_email_view(client, profile, user):
     assert User.objects.filter(username="testuser2", email="testmail2@example.com").exists()
     session = client.session
     assert 'register_form_data' not in session
+
+
+@pytest.mark.django_db
+def test_edit_profile(client, profile, user):
+    client.force_login(user=user)
+
+    data = {"username": "updatetestuser",
+            "email": "updatetestmail@example.com"}
+
+    url = reverse("accounts:edit_profile")
+
+    response = client.post(url, data=data, format="json")
+    assert response.status_code == 302
+
+    assert data['username'] == "updatetestuser"
+    assert data['email'] == "updatetestmail@example.com"
+    

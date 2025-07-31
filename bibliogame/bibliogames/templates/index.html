@@ -12,29 +12,31 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for game in games %}
         <div class="col">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 shadow-sm d-flex flex-column">
                 {% if game.cover_image %}
-                    <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="card-img-top" style="height: 500px; object-fit: cover;">
                 {% else %}
-                    <img src="{% static 'img/image.png' %}" alt="No cover" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <img src="{{ bibliogames.image_path|default:'https://imgproxy.domestika.org/unsafe/w:1200/rs:fill/plain/src://blog-post-open-graph-covers/000/011/439/11439-original.jpg?1692707330' }}" alt="No cover" class="card-img-top" style="height: 280px; object-fit: cover;">
                 {% endif %}
-    
-                <div class="card-body"> 
-                    <h5 class="card-title">{{ game.title }}</h5>
-    
-                <div class="rating mb-2">
-                    {% with "12345"|make_list as stars %}
-                        {% for i in stars %}
-                            {% if forloop.counter <= game.average_rating %}
-                                <i class="bi bi-star-fill text-warning"></i>
-                            {% else %}
-                                <i class="bi bi-star text-muted"></i>
-                            {% endif %}
-                        {% endfor %}
-                    {% endwith %}
-                </div>
 
-                <a class="btn btn-primary" href="{% url 'bibliogames:game_detail' pk=game.pk %}">Details</a>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ game.title }}</h5>
+
+                    <div class="rating mb-2">
+                        {% with "12345"|make_list as stars %}
+                            {% for i in stars %}
+                                {% if forloop.counter <= game.average_rating %}
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                {% else %}
+                                    <i class="bi bi-star text-muted"></i>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+
+                    <div class="mt-auto">
+                        <a class="btn btn-primary mb-2" href="{% url 'bibliogames:game_detail' pk=game.pk %}">Details</a>
+
                         {% if request.user.is_authenticated %}
                             {% if game.id in favorite_game_ids %}
                                 <form action="{% url 'bibliogames:delete_favorite_game' game.id %}" method="post" class="d-inline">
@@ -56,10 +58,11 @@
                                 <i class="bi bi-heart"></i> Log in to add favorites
                             </a>
                         {% endif %}
-
+                    </div>
                 </div>
             </div>
         </div>
+
         {% endfor %}
     </div>
 {% endblock %}
