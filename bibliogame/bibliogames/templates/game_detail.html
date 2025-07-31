@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container my-3">
+
+    {% if messages %}
+    <div id="messages-container" style="padding: 10px; margin-bottom: 15px;">
+        {% for message in messages %}
+        <div style="position: relative; padding: 10px 35px 10px 10px; margin-bottom: 5px; border: 1px solid #ccc; background: #f5f5f5; color: #333;">
+            {{ message }}
+            <button onclick="this.parentElement.style.display='none';" 
+                    style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+                        background: transparent; border: none; font-weight: bold; cursor: pointer; font-size: 16px; line-height: 1;">
+            ×
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6">
+            {% if game.cover_image %}
+                <img src="{{ game.cover_image.url }}" class="img-fluid rounded shadow " alt="{{ game.title }}">
+            {% else %}
+                <img src="{% static 'img/image.png' %}" class="img-fluid rounded shadow" width="400" alt="No cover">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h3>{{ game.title }}</h3>
+
+            <p><strong>Release Date:</strong> {{ game.release_date }}</p>
+            <p><strong>Developer:</strong> {{ game.developer.name }}</p>
+
+            <p><strong>Genres:</strong>
+                {% for genre in game.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No genres
+                {% endfor %}
+            </p>
+
+            <p><strong>Platforms:</strong>
+                {% for platform in game.platforms.all %}
+                    {{ platform.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No platforms
+                {% endfor %}
+            </p>
+
+            <div class="rating mb-2">
+                    {% with "12345"|make_list as stars %}
+                        {% for i in stars %}
+                            {% if forloop.counter <= game.average_rating %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% else %}
+                                <i class="bi bi-star text-muted"></i>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+            </div>
+
+            {% if game.description %}
+                <p>{{ game.description }}</p>
+            {% endif %}
+
+            <a href="{% url 'bibliogames:add_review' game.id %}">Add review</a>
+        </div>
+    </div>
+
+    <div class="review-section mt-5">
+        <h4>Reviews</h4>
+        {% if reviews %}
+            <ul class="list-group">
+                {% for review in reviews %}
+                    <li class="list-group-item">
+                        <strong>{{ review.user.username }}</strong>
+                        {% if user == review.user %}
+                            <div>
+                                <a href="{% url 'bibliogames:edit_review' review.id %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                <form method="post" action="{% url 'bibliogames:delete_review' review.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Are you sure you want to delete this review?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                        <div>
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                {% else %}
+                                    <i class="bi bi-star text-muted"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p>{{ review.comment }}</p>
+                    </li>
+                {% endfor %}    
+            </ul>
+        {% else %}
+        <p>No reviews yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

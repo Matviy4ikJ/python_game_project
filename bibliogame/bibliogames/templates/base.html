@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Game{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+    nav.navbar {
+        min-height: 180px;
+        z-index: 1030;
+    }
+
+    body {
+        padding-top: 190px !important;
+    }
+</style>
+
+    </style>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark fixed-top">
+            <div class="container d-flex flex-row align-items-center justify-content-between">
+                <div>
+                    <a href="{% url 'bibliogames:index' %}" class="navbar-brand">Home</a>
+                </div>
+                <div>
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'bibliogames:create_game' %}" class="navbar-brand">Suggest Game</a>
+                    {% else %}
+                    {% endif %}
+                    {% if request.user.is_authenticated and request.user.is_staff %}
+                    <a href="{% url 'bibliogames:moderation_list' %}" class="navbar-brand text-warning">Moderation</a>
+                    {% endif %}
+                </div>
+                    <form action="{% url 'bibliogames:index' %}" method="get" class="d-flex flex-wrap gap-2">
+                        <select name="genre" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            <option value="">Genre</option>
+                            {% for genre in genres %}
+                            <option value="{{ genre.id }}" {% if selected_genre == genre.id %}selected{% endif %}>{{ genre.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <select name="platform" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            <option value="">Platform</option>
+                            {% for platform in platforms %}
+                            <option value="{{ platform.id }}" {% if selected_platform == platform.id %}selected{% endif %}>{{ platform.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <select name="developer" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            <option value="">Developer</option>
+                            {% for developer in developers %}
+                            <option value="{{ developer.id }}" {% if selected_developer == developer.id %}selected{% endif %}>{{ developer.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <select name="sort" class="form-select me-2"
+                                style="min-width: 100px; max-width: 120px; padding: 0.25rem 0.5rem;"
+                                onchange="this.form.submit()">
+                            {% with request.GET.sort as current_sort %}
+                                <option value="" {% if not current_sort %}selected{% endif %}>Sort</option>
+                                <option value="rating_high" {% if current_sort == "rating_high" %}selected{% endif %}>Highest rating</option>
+                                <option value="rating_low" {% if current_sort == "rating_low" %}selected{% endif %}>Lowest rating</option>
+                                <option value="release_new" {% if current_sort == "release_new" %}selected{% endif %}>Newest first</option>
+                                <option value="release_old" {% if current_sort == "release_old" %}selected{% endif %}>Oldest first</option>
+                            {% endwith %}
+                        </select>
+
+                        <input type="search"
+                            class="form-control me-3"
+                            name="search"
+                            placeholder="Search games..."
+                            value="{{ request.GET.search|default_if_none:'' }}"
+                            onchange="this.form.submit()"
+                            style="min-width: 200px;">
+                    </form>
+                <div>
+                    <ul class="navbar-nav ms-auto">
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'accounts:profile' %}">{{ request.user.username }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'accounts:logout' %}">Log out</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'accounts:register' %}" class="navbar-brand">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'accounts:login' %}" class="navbar-brand">Log In</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container pt-5 mt-5 flex-shrink-0">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+    </footer>
+</body>
+</html>
