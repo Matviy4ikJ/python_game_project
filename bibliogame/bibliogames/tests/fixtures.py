@@ -1,6 +1,6 @@
 import pytest
 import datetime
-from bibliogames.models import Game, Developer, Genre, Platforms, Favorites, FavoriteGame
+from bibliogames.models import Game, Developer, Genre, Platforms, Favorites, FavoriteGame, Review
 
 
 @pytest.fixture
@@ -52,3 +52,13 @@ def favorite_game(user, game):
                                                  game=game)
 
     return favorite_game_
+
+
+@pytest.fixture
+def review(user, game):
+    return Review.objects.create(
+        user=user,
+        game=game,
+        rating=4,
+        comment="test comment"
+    )

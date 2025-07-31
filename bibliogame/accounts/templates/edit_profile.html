@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-<<<<<<< HEAD
 {% load static %}
 {% block content %}
 
@@ -8,7 +7,7 @@
         {% if profile.avatar %}
             <img src="{{ profile.avatar.url }}" alt="avatar" class="rounded-circle" width="150">
         {% else %}
-            <img src="{% static 'img/image.png' %}" alt="avatar" class="rounded-circle" width="100">
+            <img src="https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg" alt="avatar" class="rounded-circle" width="100">
         {% endif %}
     </div>
 
@@ -20,32 +19,4 @@
             <a href="{% url 'accounts:profile'%}" class="btn btn-danger">Cancel</a>
         </form>
    </div>
-=======
-
-{% block content %}
-    <h2>Edit Profile</h2>
-    {% if profile.avatar %}
-        <p>Current Avatar:</p>
-        <img src="{{ profile.avatar.url }}" alt="avatar" width="150">
-    {% else %}
-        <p>No Avatar</p>
-   {% endif %}
-
-
-   <form method="POST" enctype="multipart/form-data"> 
-        {% csrf_token %}
-        {{ form.as_p }}
-
-    <form method="get" action="{% url 'accounts:confirm_email' %}">
-        <label for="username">New Username:</label>
-        <input type="text" name="username" required placeholder="Enter new username">
-        <button type="submit">Confirm Username Change</button>
-    </form>
-        <input type="submit" value="Submit">
-   </form>
-
-
-
-
->>>>>>> origin/views
 {% endblock %}

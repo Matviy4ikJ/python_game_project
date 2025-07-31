@@ -28,7 +28,8 @@ def register(request):
 
                 Profile.objects.create(user=user)
                 Favorites.objects.create(user=user)
-
+                
+                user.backend = settings.AUTHENTICATION_BACKENDS[0]
                 login(request, user)
                 messages.success(request, 'Registration successful.')
     else:
@@ -61,7 +62,7 @@ def profile_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
     try:
         favorites = request.user.favorites
-        favorite_games = [fg.game for fg in favorites.games.all()]
+        favorite_games = [fg.game for fg in favorites.games.all() if fg.game.status == 'approved']
     except Favorites.DoesNotExist:
         favorite_games = []
 
@@ -104,12 +105,10 @@ def confirm_email_view(request):
     form = RegisterFormWithoutCaptcha(form_data)
     if form.is_valid():
         user = form.save()
+        user.backend = settings.AUTHENTICATION_BACKENDS[0]
         login(request, user)
         del request.session['register_form_data']
         return render(request, "confirm_email.html", {"email": email})
     else:
         return HttpResponseBadRequest("Invalid form data")
-
-
-def password_reset_view(request):
-    ...
+        

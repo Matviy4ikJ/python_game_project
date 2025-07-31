@@ -53,7 +53,7 @@ def delete_game(request, game_id):
     game = get_object_or_404(Game, id=game_id)
 
     game.delete()
-    return redirect("accounts:profile_view")
+    return redirect("accounts:profile")
 
 
 @staff_member_required()

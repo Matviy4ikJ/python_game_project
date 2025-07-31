@@ -23,7 +23,8 @@
             {% if game.cover_image %}
                 <img src="{{ game.cover_image.url }}" class="img-fluid rounded shadow" alt="{{ game.title }}">
             {% else %}
-                <img src="{% static 'img/image.png' %}" class="img-fluid rounded shadow" alt="No cover">
+                <img src="{{ bibliogames.image_path|default:'https://imgproxy.domestika.org/unsafe/w:1200/rs:fill/plain/src://blog-post-open-graph-covers/000/011/439/11439-original.jpg?1692707330' }}" 
+                class="img-fluid rounded shadow" alt="No cover">
             {% endif %}
         </div>
         <div class="col-md-6">
@@ -34,7 +35,7 @@
 
             <p><strong>Genres:</strong>
                 {% for genre in game.genres.all %}
-                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}  
                 {% empty %}
                     No genres
                 {% endfor %}
