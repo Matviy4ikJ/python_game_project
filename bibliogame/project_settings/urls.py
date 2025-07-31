@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('bibliogames.urls', namespace='bibliogames')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('captcha/', include('captcha.urls')),
+    path('accounts/', include('allauth.urls'))
 ]
 
 if settings.DEBUG:

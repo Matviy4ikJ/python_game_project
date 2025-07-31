@@ -11,7 +11,7 @@ class GameCreateForm(forms.ModelForm):
     developer_website = forms.URLField(
         required=False,
         label="Developer Website",
-        widget=forms.URLInput(attrs={"placeholder": "Enter developer website (optional)", "class": "form-control"})
+        widget=forms.URLInput(attrs={"placeholder": "Enter developer website", "class": "form-control"})
     )
 
     class Meta:
@@ -22,7 +22,8 @@ class GameCreateForm(forms.ModelForm):
             "release_date",
             "genres",
             "platforms",
-            "cover_image"
+            "cover_image",
+            "link",
         ]
 
         labels = {
@@ -32,6 +33,7 @@ class GameCreateForm(forms.ModelForm):
             "genres": "Genres",
             "platforms": "Platforms",
             "cover_image": "Cover Image",
+            "link": "Game Link",
         }
 
         widgets = {
@@ -41,6 +43,7 @@ class GameCreateForm(forms.ModelForm):
             "genres": forms.CheckboxSelectMultiple(),
             "platforms": forms.CheckboxSelectMultiple(),
             "cover_image": forms.ClearableFileInput(attrs={"class": "form-control-file"}),
+            "link": forms.URLInput(attrs={"placeholder": "Enter game URL", "class": "form-control"}),
         }
 
     def save(self, commit=True):
@@ -54,6 +57,69 @@ class GameCreateForm(forms.ModelForm):
                 defaults={"name": name.strip(), "website": website}
             )
             instance.developer = developer
+
+        if commit:
+            instance.save()
+            self.save_m2m()
+
+        return instance
+
+
+class GameEditForm(forms.ModelForm):
+    developer_name = forms.CharField(
+        required=False,
+        label="Developer Name",
+        widget=forms.TextInput(attrs={"placeholder": "Enter developer name", "class": "form-control"})
+    )
+    developer_website = forms.URLField(
+        required=False,
+        label="Developer Website",
+        widget=forms.URLInput(attrs={"placeholder": "Enter developer website", "class": "form-control"})
+    )
+
+    class Meta:
+        model = Game
+        fields = [
+            "title",
+            "description",
+            "release_date",
+            "genres",
+            "platforms",
+            "cover_image",
+            "link",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 5}),
+            "release_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "genres": forms.CheckboxSelectMultiple(),
+            "platforms": forms.CheckboxSelectMultiple(),
+            "cover_image": forms.ClearableFileInput(attrs={"class": "form-control-file"}),
+            "link": forms.URLInput(attrs={"class": "form-control"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.developer:
+            self.fields['developer_name'].initial = self.instance.developer.name
+            self.fields['developer_website'].initial = self.instance.developer.website
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        name = self.cleaned_data.get("developer_name")
+        website = self.cleaned_data.get("developer_website")
+
+        if name:
+            developer, created = Developer.objects.get_or_create(
+                name__iexact=name.strip(),
+                defaults={"name": name.strip(), "website": website}
+            )
+            if not created and website and developer.website != website:
+                developer.website = website
+                developer.save()
+            instance.developer = developer
+        else:
+            instance.developer = None
 
         if commit:
             instance.save()
