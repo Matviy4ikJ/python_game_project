@@ -76,18 +76,3 @@ def delete_favorite_game(request, game_id):
             pass
 
     return redirect("accounts:profile")
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
-def game_detail(request, pk):
-    game = get_object_or_404(Game, pk=pk, status='approved')
-    return render(request, 'game_detail.html', {'game': game})
-=======
-            favorites = None
-    return redirect("")
->>>>>>> cdf141a (registered new models)
-=======
->>>>>>> 96b2f5e (debug)
-=======
->>>>>>> views
