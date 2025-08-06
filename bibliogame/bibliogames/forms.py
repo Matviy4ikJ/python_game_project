@@ -139,8 +139,3 @@ class ReviewForm(forms.ModelForm):
                     'rows': 4
                 })
         }
-<<<<<<< HEAD
->>>>>>> cdf141a (registered new models)
-=======
-
->>>>>>> 96b2f5e (debug)
