@@ -75,10 +75,3 @@ def game_detail(request, pk):
         'reviews': reviews,
         'user_review': user_review,
     })
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 096ca5e (Reviews)
-=======
->>>>>>> 96b2f5e (debug)
-=======
->>>>>>> views
