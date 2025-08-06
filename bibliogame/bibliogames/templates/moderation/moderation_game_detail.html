@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6">
+            {% if game.cover_image %}
+                <img src="{{ game.cover_image.url }}" class="img-fluid rounded shadow" alt="{{ game.title }}">
+            {% else %}
+                <img src="{% static 'images/no_cover.png' %}" class="img-fluid rounded shadow" alt="No cover">
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <h3>{{ game.title }}</h3>
+
+            <p><strong>Release Date:</strong> {{ game.release_date }}</p>
+            <p><strong>Developer:</strong> {{ game.developer.name }}</p>
+
+            <p><strong>Genres:</strong>
+                {% for genre in game.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No genres
+                {% endfor %}
+            </p>
+
+            <p><strong>Platforms:</strong>
+                {% for platform in game.platforms.all %}
+                    {{ platform.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No platforms
+                {% endfor %}
+            </p>
+
+            <div class="rating mb-2">
+                {% with "12345"|make_list as stars %}
+                    {% for i in stars %}
+                        {% if forloop.counter <= game.average_rating %}
+                            <i class="bi bi-star-fill text-warning"></i>
+                        {% else %}
+                            <i class="bi bi-star text-muted"></i>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+            </div>
+
+            {% if game.description %}
+                <p>{{ game.description }}</p>
+            {% endif %}
+
+            <div class="mt-4 d-flex gap-2">
+                <a href="{% url 'bibliogames:moderate_game' game.id 'approve' %}" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Approve
+                </a>
+                <a href="{% url 'bibliogames:moderate_game' game.id 'reject' %}" class="btn btn-danger">
+                    <i class="bi bi-x-circle"></i> Reject
+                </a>
+                <a href="{% url 'bibliogames:moderation_list' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

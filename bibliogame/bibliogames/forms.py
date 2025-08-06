@@ -1,41 +1,65 @@
 from django import forms
-from bibliogames.models import Game, Review
+from bibliogames.models import Game, Review, Developer
 
 
 class GameCreateForm(forms.ModelForm):
+    developer_name = forms.CharField(
+        required=False,
+        label="Developer Name",
+        widget=forms.TextInput(attrs={"placeholder": "Enter developer name", "class": "form-control"})
+    )
+    developer_website = forms.URLField(
+        required=False,
+        label="Developer Website",
+        widget=forms.URLInput(attrs={"placeholder": "Enter developer website (optional)", "class": "form-control"})
+    )
+
     class Meta:
         model = Game
-        fields = ["title", "description", "release_date", "developer", "genres", "platforms", "cover_image"]
+        fields = [
+            "title",
+            "description",
+            "release_date",
+            "genres",
+            "platforms",
+            "cover_image"
+        ]
 
-<<<<<<< HEAD
-        labels = {"title": "Game Title",
-                  "description": "Game Description",
-                  "release_date": "Game Creation Date",
-                  "developer": "Developer",
-                  "genres": "Genre",
-                  "platforms": "Platforms",
-                  "cover_image": "Cover Image"}
+        labels = {
+            "title": "Game Title",
+            "description": "Description",
+            "release_date": "Release Date",
+            "genres": "Genres",
+            "platforms": "Platforms",
+            "cover_image": "Cover Image",
+        }
 
         widgets = {
-            "release_date": forms.DateInput(attrs={"placeholder":"year-month-day"}),
-            "title": forms.TextInput(attrs={"placeholder": "Enter game title"}),
-            "description": forms.Textarea(attrs={"placeholder":"Describe the game"}),
-            "developer": forms.TextInput(attrs={"placeholder": "Enter game developer", "class": "form-control"}),
-            "genres": forms.SelectMultiple(attrs={"class": "form-control"}),
-            "platforms": forms.SelectMultiple(attrs={"class": "form-control"}),
-            "cover_image": forms.ClearableFileInput(attrs={"class": "form-control"})
+            "title": forms.TextInput(attrs={"placeholder": "Enter game title", "class": "form-control"}),
+            "description": forms.Textarea(attrs={"placeholder": "Describe the game", "class": "form-control", "rows": 5}),
+            "release_date": forms.DateInput(attrs={"placeholder": "YYYY-MM-DD", "class": "form-control"}),
+            "genres": forms.CheckboxSelectMultiple(),
+            "platforms": forms.CheckboxSelectMultiple(),
+            "cover_image": forms.ClearableFileInput(attrs={"class": "form-control-file"}),
         }
 
     def save(self, commit=True):
-        new_dev_name = self.cleaned_data.get("")
-=======
-        labels = {"title": "game title",
-                  "description": "game description",
-                  "release_date": "game creation date",
-                  "developer": "game developer",
-                  "genres": "game genres",
-                  "platforms": "game platforms",
-                  "cover_image": "game icon"}
+        instance = super().save(commit=False)
+        name = self.cleaned_data.get("developer_name")
+        website = self.cleaned_data.get("developer_website")
+
+        if name:
+            developer, _ = Developer.objects.get_or_create(
+                name__iexact=name.strip(),
+                defaults={"name": name.strip(), "website": website}
+            )
+            instance.developer = developer
+
+        if commit:
+            instance.save()
+            self.save_m2m()
+
+        return instance
 
 
 class ReviewForm(forms.ModelForm):
@@ -44,6 +68,13 @@ class ReviewForm(forms.ModelForm):
         fields = ['rating', 'comment']
         widgets = {
             'rating': forms.Select(choices=Review.RATING_CHOICES),
-            'comment': forms.Textarea(attrs={'rows': 4})
+            'comment': forms.Textarea(attrs={'class': 'form-control',
+                    'placeholder': 'Write your review...',
+                    'rows': 4
+                })
         }
+<<<<<<< HEAD
 >>>>>>> cdf141a (registered new models)
+=======
+
+>>>>>>> 96b2f5e (debug)

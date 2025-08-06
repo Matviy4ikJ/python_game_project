@@ -29,7 +29,7 @@
                     <td>{{ game.developer.name }}</td>
                     <td>{{ game.release_date }}</td>
                     <td>
-                        <a href="{% url 'bibliogames:moderate_game' game.id %}" class="btn btn-sm btn-info">View</a>
+                        <a href="{% url 'bibliogames:moderate_game_detail' game.id %}" class="btn btn-sm btn-info">View</a>
                     </td>
                 </tr>
                 {% endfor %}

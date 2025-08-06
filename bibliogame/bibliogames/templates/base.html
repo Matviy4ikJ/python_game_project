@@ -32,7 +32,9 @@
                     {% if request.user.is_authenticated %}
                     <a href="{% url 'bibliogames:create_game' %}" class="navbar-brand">Suggest Game</a>
                     {% else %}
-
+                    {% endif %}
+                    {% if request.user.is_authenticated and request.user.is_staff %}
+                    <a href="{% url 'bibliogames:moderation_list' %}" class="navbar-brand text-warning">Moderation</a>
                     {% endif %}
                 </div>
                     <form action="{% url 'bibliogames:index' %}" method="get" class="d-flex flex-wrap gap-2">
