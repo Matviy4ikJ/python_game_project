@@ -16,6 +16,7 @@ class Game(models.Model):
     genres = models.ManyToManyField("Genre")
     platforms = models.ManyToManyField("Platforms")
     cover_image = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    link = models.URLField(null=False, blank=False) 
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
     @property

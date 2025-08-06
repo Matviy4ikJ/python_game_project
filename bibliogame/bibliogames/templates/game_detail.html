@@ -59,11 +59,14 @@
                         {% endfor %}
                     {% endwith %}
             </div>
-
             {% if game.description %}
                 <p>{{ game.description }}</p>
             {% endif %}
-
+            <p><strong>Link:</strong> 
+                <a href="{{ game.link }}" target="_blank" rel="noopener noreferrer">
+                    {{ game.link }}
+                </a>
+            </p>
             <a href="{% url 'bibliogames:add_review' game.id %}">Add review</a>
         </div>
     </div>
@@ -78,6 +81,16 @@
                         {% if user == review.user %}
                             <div>
                                 <a href="{% url 'bibliogames:edit_review' review.id %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                <form method="post" action="{% url 'bibliogames:delete_review' review.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Are you sure you want to delete this review?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        {% elif request.user.is_authenticated and request.user.is_staff %}
+                            <div>
                                 <form method="post" action="{% url 'bibliogames:delete_review' review.id %}" class="d-inline">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-sm btn-outline-danger"

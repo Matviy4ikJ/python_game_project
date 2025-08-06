@@ -37,7 +37,7 @@ def add_review(request, game_id):
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
 
-    if review.user != request.user:
+    if review.user != request.user and not request.user.is_staff:
         return HttpResponseForbidden('You can delete only your review')
 
     game_id = review.game.id
@@ -52,12 +52,10 @@ def edit_review(request, review_id):
     if request.method == 'POST':
         form = ReviewForm(request.POST, instance=review)
         if form.is_valid():
-            updated_review = form.save(commit=False)
-            updated_review.is_approved = False
-            updated_review.save()
-            messages.success(request, 'Your review has been updated and sent for re-approval.')
+            form.save()
+            messages.success(request, 'Your review has been updated.')
             return redirect('bibliogames:game_detail', pk=review.game.id)
     else:
         form = ReviewForm(instance=review)
-    return render(request, 'reviews/edit_review.html', {'form': form, 'game': review.game})
     
+    return render(request, 'edit_review.html', {'form': form, 'game': review.game})

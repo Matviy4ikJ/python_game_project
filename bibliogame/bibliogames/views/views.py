@@ -3,7 +3,7 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from bibliogames.forms import GameCreateForm
-from bibliogames.models import Game, Favorites, FavoriteGame
+from bibliogames.models import Game, Favorites, FavoriteGame, Developer
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -13,7 +13,7 @@ def create_game(request):
         return HttpResponseForbidden("First register to submit your game")
 
     if request.method == "POST":
-        form = GameCreateForm(request.POST)
+        form = GameCreateForm(request.POST, request.FILES)
         if form.is_valid():
             developer_name = form.cleaned_data['developer_name']
             developer_website = form.cleaned_data['developer_website']

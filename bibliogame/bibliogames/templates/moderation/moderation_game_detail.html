@@ -7,7 +7,7 @@
             {% if game.cover_image %}
                 <img src="{{ game.cover_image.url }}" class="img-fluid rounded shadow" alt="{{ game.title }}">
             {% else %}
-                <img src="{% static 'images/no_cover.png' %}" class="img-fluid rounded shadow" alt="No cover">
+                <img src="{% static 'img/image.png' %}" class="img-fluid rounded shadow" alt="No cover">
             {% endif %}
         </div>
 
@@ -44,12 +44,19 @@
                     {% endfor %}
                 {% endwith %}
             </div>
+                {% if game.description %}
+                    <p>{{ game.description }}</p>
+                {% endif %}
 
-            {% if game.description %}
-                <p>{{ game.description }}</p>
-            {% endif %}
-
+                <p><strong>Link:</strong> 
+                    <a href="{{ game.link }}" target="_blank" rel="noopener noreferrer">
+                        {{ game.link }}
+                    </a>
+                </p>
             <div class="mt-4 d-flex gap-2">
+                <a href="{% url 'bibliogames:edit_game' game.id %}" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> Edit Game
+                </a>
                 <a href="{% url 'bibliogames:moderate_game' game.id 'approve' %}" class="btn btn-success">
                     <i class="bi bi-check-circle"></i> Approve
                 </a>

@@ -58,7 +58,7 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    profile = request.user.profile
+    profile, created = Profile.objects.get_or_create(user=request.user)
     try:
         favorites = request.user.favorites
         favorite_games = [fg.game for fg in favorites.games.all()]
@@ -77,18 +77,15 @@ def edit_profile_view(request):
     profile = user.profile
 
     if request.method == "POST":
-        form = ProfileUpdateForm(request.POST, request.FILES, user=user)
+        form = ProfileUpdateForm(request.POST, request.FILES, user=user, instance=profile)
         if form.is_valid():
-            avatar = form.cleaned_data.get("avatar")
-            if avatar:
-                profile.avatar = avatar
-            profile.save()
-            return redirect('accounts:edit_profile')
+            form.save()
+            return redirect('accounts:profile')
     else:
-        form = ProfileUpdateForm(user=user)
+        form = ProfileUpdateForm(user=user, instance=profile)
 
-    return render(request, "edit_profile.html", {"form": form})
-
+    return render(request, 'edit_profile.html', {"form": form, "profile": profile})
+    
 
 def confirm_email_view(request):
     email = request.GET.get("email")

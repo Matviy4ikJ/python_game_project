@@ -14,7 +14,7 @@ from .views.review import add_review, delete_review
 >>>>>>> 096ca5e (Reviews)
 =======
 from .views.views import create_game, add_favorite_game, delete_favorite_game
-from .views.moderation import moderation_list, moderate_game, delete_game, moderate_game_detail
+from .views.moderation import moderation_list, moderate_game, delete_game, moderate_game_detail, edit_game
 from .views.game import index, game_detail
 from .views.review import add_review, delete_review, edit_review
 >>>>>>> 96b2f5e (debug)
@@ -37,11 +37,15 @@ urlpatterns = [
     path('game/moderate/<int:game_id>/', moderate_game_detail, name='moderate_game_detail'),
     path('game/moderate/list/', moderation_list, name="moderation_list"),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     path('games/<int:game_id>/review/', add_review, name='add_review'),
     path('reviews/<int:review_id>/delete/', delete_review, name='delete_review'),
 >>>>>>> 096ca5e (Reviews)
 =======
+=======
+    path('game/<int:game_id>/edit/', edit_game, name='edit_game'),
+>>>>>>> 0a72937 (conflict)
     path('games/<int:game_id>/review/', add_review, name='add_review'),
     path('reviews/<int:review_id>/delete/', delete_review, name='delete_review'),
     path('reviews/<int:review_id>/edit/', edit_review, name='edit_review'),
