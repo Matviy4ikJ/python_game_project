@@ -139,3 +139,7 @@ class ReviewForm(forms.ModelForm):
                     'rows': 4
                 })
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> views

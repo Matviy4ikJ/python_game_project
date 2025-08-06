@@ -77,6 +77,7 @@ def delete_favorite_game(request, game_id):
 
     return redirect("accounts:profile")
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 def game_detail(request, pk):
@@ -88,3 +89,5 @@ def game_detail(request, pk):
 >>>>>>> cdf141a (registered new models)
 =======
 >>>>>>> 96b2f5e (debug)
+=======
+>>>>>>> views

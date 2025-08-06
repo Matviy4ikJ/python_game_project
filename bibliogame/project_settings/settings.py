@@ -26,9 +26,15 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+<<<<<<< HEAD
 DEBUG = os.getenv('DEBUG', 'False')
 
 ALLOWED_HOSTS = ['bibliogame.onrender.com']
+=======
+DEBUG = True
+
+ALLOWED_HOSTS = []
+>>>>>>> views
 
 
 # Application definition
