@@ -21,5 +21,4 @@ primary_region = "otp"
   processes = ["app"]
 
 [processes]
-  app = "gunicorn bibliogame.wsgi:application --bind 0.0.0.0:8080 --workers 2"
-  
+  app = "gunicorn project_settings.wsgi:application --bind 0.0.0.0:8080 --workers 2"

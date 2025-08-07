@@ -12,4 +12,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
-CMD ["gunicorn", "bibliogame.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "2"]
+CMD ["gunicorn", "project_settings.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "2"]
