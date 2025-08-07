@@ -26,9 +26,10 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['bibliogame-shy-sun-9509.fly.dev']
+
 
 
 # Application definition
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -175,3 +177,5 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 
 ACCOUNT_SIGNUP_FIELDS = ['username*', 'email*', 'password1*', 'password2*']
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
