@@ -59,3 +59,4 @@ def edit_review(request, review_id):
         form = ReviewForm(instance=review)
     
     return render(request, 'edit_review.html', {'form': form, 'game': review.game})
+    

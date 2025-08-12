@@ -28,9 +28,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['bibliogame-shy-sun-9509.fly.dev']
+ALLOWED_HOSTS = ['bibliogame.fly.dev', 'bibliogame-shy-sun-9509.fly.dev']
 
-
+CSRF_TRUSTED_ORIGINS = ['https://bibliogame.fly.dev']
 
 # Application definition
 

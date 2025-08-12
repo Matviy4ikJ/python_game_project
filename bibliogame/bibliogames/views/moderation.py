@@ -60,3 +60,4 @@ def delete_game(request, game_id):
 def moderate_game_detail(request, game_id):
     game = get_object_or_404(Game, id=game_id, status__in=['pending', 'approved'])
     return render(request, 'moderation/moderation_game_detail.html', {'game': game})
+    

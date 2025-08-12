@@ -7,8 +7,8 @@ from .views.review import add_review, delete_review, edit_review
 app_name = "bibliogames"
 
 urlpatterns = [
-    path('', index, name='index'),
-    path('game/add/', create_game, name='create_game'),
+    path('', index, name="index"),
+    path('game/create/', create_game, name='create_game'),
     path('game/delete/<int:game_id>/', delete_game, name='delete_game'),
     path('favorite_game/add/<int:game_id>/', add_favorite_game, name='add_favorite_game'),
     path('favorite_game/delete/<int:game_id>/', delete_favorite_game, name='delete_favorite_game'),
