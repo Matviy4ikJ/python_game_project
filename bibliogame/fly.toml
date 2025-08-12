@@ -12,8 +12,13 @@ primary_region = "otp"
 [deploy]
   release_command = "python manage.py migrate"
 
+[[mounts]]
+  source = "bibliogame_data"
+  destination = "/dbdata"
+
 [env]
   PORT = "8080"
+  DATABASE_PATH = "/dbdata/db.sqlite3"
 
 [http_service]
   internal_port = 8080

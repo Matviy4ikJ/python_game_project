@@ -1,9 +1,9 @@
 from django.conf import settings
-from django.http import HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 
 from bibliogames.forms import GameCreateForm
-from bibliogames.models import Game, Favorites, FavoriteGame, Developer
+from bibliogames.models import Game, Favorites, FavoriteGame
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -13,21 +13,12 @@ def create_game(request):
         return HttpResponseForbidden("First register to submit your game")
 
     if request.method == "POST":
-        form = GameCreateForm(request.POST, request.FILES)
+        form = GameCreateForm(request.POST)
         if form.is_valid():
-            developer_name = form.cleaned_data['developer_name']
-            developer_website = form.cleaned_data['developer_website']
-            developer, _ = Developer.objects.get_or_create(
-                name=developer_name,
-                defaults={'website': developer_website}
-            )
-
             game = form.save(commit=False)
-            game.developer = developer
             game.author = request.user
             game.status = 'pending'
             game.save()
-            form.save_m2m()
             return redirect("accounts:profile")
     else:
         form = GameCreateForm()
@@ -54,8 +45,8 @@ def add_favorite_game(request, game_id):
         request.session[settings.FAVORITE_SESSION_ID] = favorites
     else:
         favorites, _ = Favorites.objects.get_or_create(user=request.user)
-        FavoriteGame.objects.get_or_create(favorites=favorites, game=game)
-        favorites.save()
+        favorite_game, created = FavoriteGame.objects.get_or_create(favorites=favorites, game=game)
+        
     return redirect("accounts:profile")
 
 
@@ -76,3 +67,9 @@ def delete_favorite_game(request, game_id):
             pass
 
     return redirect("accounts:profile")
+
+
+def game_detail(request, pk):
+    game = get_object_or_404(Game, pk=pk, status='approved')
+    return render(request, 'game_detail.html', {'game': game})
+    

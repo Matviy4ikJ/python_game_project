@@ -1,8 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-
-from django.db.models import Avg
-
-from ..models import Game, Platforms, Developer, Genre, Favorites
+from ..models import Game, Platforms, Developer, Genre
 
 
 def index(request):
@@ -28,23 +25,15 @@ def index(request):
 
     match sort_option:
         case "rating_high":
-            games = games.annotate(avg_rating=Avg("reviews__rating")).order_by("-avg_rating")
+            games = list(games)
+            games.sort(key=lambda g: g.average_rating, reverse=True)
         case "rating_low":
-            games = games.annotate(avg_rating=Avg("reviews__rating")).order_by("avg_rating")
+            games = list(games)
+            games.sort(key=lambda g: g.average_rating)
         case "release_new":
             games = games.order_by('-release_date')
         case "release_old":
             games = games.order_by('release_date')
-
-
-    if request.user.is_authenticated:
-        try:
-            favorites = request.user.favorites
-            favorite_game_ids = set(fg.game.id for fg in favorites.games.all())
-        except Favorites.DoesNotExist:
-            favorite_game_ids = set()
-    else:
-        favorite_game_ids = set()
 
     context = {
         'games': games,
@@ -56,7 +45,6 @@ def index(request):
         'selected_developer': int(developer_id) if developer_id else None,
         'search_query': search_query or '',
         'sort_option': sort_option or '',
-        'favorite_game_ids': favorite_game_ids, 
     }
 
     return render(request, 'index.html', context)
@@ -64,14 +52,5 @@ def index(request):
 
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk, status='approved')
-    reviews = game.reviews.select_related('user').all()
+    return render(request, 'game_detail.html', {'game': game})
 
-    user_review = None
-    if request.user.is_authenticated:
-        user_review = reviews.filter(user=request.user).first()
-
-    return render(request, 'game_detail.html', {
-        'game': game,
-        'reviews': reviews,
-        'user_review': user_review,
-    })
