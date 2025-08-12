@@ -11,5 +11,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
 
 RUN python manage.py collectstatic --noinput
+RUN mkdir -p /dbdata
+RUN chown -R nobody:nogroup /dbdata
 
 CMD ["gunicorn", "project_settings.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "2"]
